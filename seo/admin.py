@@ -4,11 +4,13 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.contenttypes import generic
 from django.core.exceptions import ImproperlyConfigured
-from seo.models import Seo
 from seo.importpath import importpath
+from seo.forms import SeoForm
+from seo.models import Seo
 
 class SeoInlines(generic.GenericStackedInline):
     model = Seo
+    form = SeoForm
     extra = 1
     max_num = 1
 
