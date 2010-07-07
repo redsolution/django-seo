@@ -19,6 +19,8 @@ class ShowSeo(template.Node):
     def render(self, context):
         object = template.Variable(self.object).resolve(context)
         try:
+            if object is None:
+                raise ObjectDoesNotExist
             seo = Seo.objects.get(
                 content_type=ContentType.objects.get_for_model(
                         object.__class__),
@@ -49,6 +51,8 @@ class GetSeo(template.Node):
     def render(self, context):
         object = template.Variable(self.object).resolve(context)
         try:
+            if object is None:
+                raise ObjectDoesNotExist
             seo = Seo.objects.get(
                 content_type=ContentType.objects.get_for_model(
                         object.__class__),
