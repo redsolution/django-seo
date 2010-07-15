@@ -1,5 +1,9 @@
+.svn
 *.orig
 *.pyc
 .project
 .pydevproject
 .settings
+*.egg-info
+dist/
+build/
