@@ -1,0 +1,2 @@
+recursive-include seo *.py
+recursive-include seo *.html
