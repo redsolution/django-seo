@@ -32,10 +32,10 @@ First of all, load the seo_tags in every template you want to use it::
     {% load seo_tags %}
     
 Use::
-    {% show_seo <title|keywords|description> for <object> %}
+    {% seo <title|keywords|description> for <object> %}
     
 Or::
-    {% get_seo <title|keywords|description> for <object> as <variable> %}
+    {% seo <title|keywords|description> for <object> as <variable> %}
     {{ <variable> }}
 
 Example:
@@ -48,7 +48,8 @@ Example:
     )
     
     SEO_FOR_MODELS = [
-        'item.models.Item',
+        'app.models.Object',
+        'app.models.Another',
     ]
 
 
@@ -56,13 +57,47 @@ Example:
     {% load seo_tags %}
     <html>
         <head>
-            {% show_seo title for item %}
-            {% show_seo keywords for item %}
-            {% show_seo description for item %}
+            <meta name="description" content="{% seo description for object %}" />
+            <meta name="keywords" content="{% seo keywords for object %}" />
+            <title>{% seo title for object %}</title>
         </head>
         <body>
-            {{ item.content }}
-            {% get_seo title for item as seo_title %}
-            <h1>{{ seo_title }}</h1>
+            {{ object.content }}
+            <h1>{% seo title for object as seo_title %}{{ seo_title }}</h1>
         </body>
     </html>
+
+If you are using extend
+-----------------------
+
+``templates/base.html``::
+    <html>
+        <head>
+            <meta name="description" content="{% block description %}{% endblock %}" />
+            <meta name="keywords" content="{% block keywords %}{% endblock %}" />
+            <title>{% block title %}{% endblock %}</title>
+        </head>
+        <body>
+            {% block content %}{% endblock %}
+        </body>
+    </html>
+
+``templates/object.html``::
+    {% load seo_tags %}
+    {% block description %}{% seo description for object %}{% endblock %}
+    {% block keywords %}{% seo keywords for object %}{% endblock %}
+    {% block title %}{% seo title for object %}{% endblock %}
+
+    {% block content %}
+        {{ object.content }}
+    {% endblock %}
+
+``templates/another.html``::
+    {% load seo_tags %}
+    {% block description %}{% seo description for another %}{% endblock %}
+    {% block keywords %}{% seo keywords for another %}{% endblock %}
+    {% block title %}{% seo title for another %}{% endblock %}
+
+    {% block content %}
+        {{ another.content }}
+    {% endblock %}
