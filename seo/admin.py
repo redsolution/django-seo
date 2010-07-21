@@ -35,6 +35,6 @@ for model_name in settings.SEO_FOR_MODELS:
 
     setattr(model_admin, 'inlines', getattr(model_admin, 'inlines', []))
     if not SeoInlines in model_admin.inlines:
-        model_admin.inlines.append(SeoInlines)
+        model_admin.inlines = list(model_admin.inlines)[:] + [SeoInlines]
 
     admin.site.register(model, model_admin)
