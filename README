@@ -2,7 +2,7 @@
 django-seo
 ==========
 
-django-seo.
+Seo fields for objects of any model registed in admin or for specified url.
 
 Installation:
 =============
@@ -32,10 +32,10 @@ First of all, load the seo_tags in every template you want to use it::
     {% load seo_tags %}
     
 Use::
-    {% seo <title|keywords|description> for <object> %}
+    {% seo <title|keywords|description> [for <object>] %}
     
 Or::
-    {% seo <title|keywords|description> for <object> as <variable> %}
+    {% seo <title|keywords|description> [for <object>] as <variable> %}
     {{ <variable> }}
 
 Example:
@@ -43,6 +43,8 @@ Example:
 
 ``settings.py``::
     INSTALLED_APPS = (
+        ...
+        'app',
         ...
         'seo',
     )
@@ -73,9 +75,9 @@ If you are using extend
 ``templates/base.html``::
     <html>
         <head>
-            <meta name="description" content="{% block description %}{% endblock %}" />
-            <meta name="keywords" content="{% block keywords %}{% endblock %}" />
-            <title>{% block title %}{% endblock %}</title>
+            <meta name="description" content="{% block description %}{% seo description %}{% endblock %}" />
+            <meta name="keywords" content="{% block keywords %}{% seo keywords %}{% endblock %}" />
+            <title>{% block title %}{% seo title %}{% endblock %}</title>
         </head>
         <body>
             {% block content %}{% endblock %}

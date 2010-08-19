@@ -6,7 +6,7 @@ from django.contrib.contenttypes import generic
 from django.core.exceptions import ImproperlyConfigured
 from seo.importpath import importpath
 from seo.forms import SeoForm
-from seo.models import Seo
+from seo.models import Seo, Url
 
 class SeoInlines(generic.GenericStackedInline):
     model = Seo
@@ -19,6 +19,15 @@ class SeoAdmin(admin.ModelAdmin):
 
 try:
     admin.site.register(Seo, SeoAdmin)
+except admin.sites.AlreadyRegistered:
+    pass
+
+class UrlAdmin(admin.ModelAdmin):
+    model = Url
+    inlines = [SeoInlines]
+
+try:
+    admin.site.register(Url, UrlAdmin)
 except admin.sites.AlreadyRegistered:
     pass
 

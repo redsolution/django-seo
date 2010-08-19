@@ -7,8 +7,8 @@ from django.contrib.contenttypes.models import ContentType
 
 class Seo(models.Model):
     class Meta:
-        verbose_name = _('SEO')
-        verbose_name_plural = _('SEO')
+        verbose_name = _('SEO fields')
+        verbose_name_plural = _('SEO fields')
 
     title = models.CharField(verbose_name=_('Title'),
         max_length=200, default='', blank=True)
@@ -23,3 +23,15 @@ class Seo(models.Model):
 
     def __unicode__(self):
         return self.title
+
+class Url(models.Model):
+    class Meta:
+        verbose_name = _('URL')
+        verbose_name_plural = _('URLs')
+
+    url = models.CharField(verbose_name=_('Title'),
+        max_length=200, default='/', unique=True,
+        help_text=_("This should be an absolute path, excluding the domain name. Example: '/events/search/'."))
+
+    def __unicode__(self):
+        return self.url
