@@ -29,7 +29,7 @@ class Url(models.Model):
         verbose_name = _('URL')
         verbose_name_plural = _('URLs')
 
-    url = models.CharField(verbose_name=_('Title'),
+    url = models.CharField(verbose_name=_('URL'),
         max_length=200, default='/', unique=True,
         help_text=_("This should be an absolute path, excluding the domain name. Example: '/events/search/'."))
 
