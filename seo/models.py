@@ -33,5 +33,8 @@ class Url(models.Model):
         max_length=200, default='/', unique=True,
         help_text=_("This should be an absolute path, excluding the domain name. Example: '/events/search/'."))
 
+    def get_absolute_url(self):
+        return self.url
+
     def __unicode__(self):
         return self.url
