@@ -10,10 +10,10 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name="grandma.django-seo",
+    name="redsolution.django-seo",
     version="0.1.0",
-    description=("Django seo" +
-        " with GrandmaCMS integration"),
+    description=("Django seo" + 
+        " with RedsolutionCMS integration"),
     license="LGPL",
     keywords="django seo",
 
@@ -41,6 +41,6 @@ setup(
     zip_safe=False,
     long_description=open('README').read(),
     entry_points={
-        'grandma_setup': ['seo = seo.grandma_setup', ],
+        'redsolution_setup': ['seo = seo.redsolution_setup', ],
     }
 )
