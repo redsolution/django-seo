@@ -10,9 +10,9 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name="redsolution.django-seo",
+    name="redsolutioncms.django-seo",
     version="0.1.0",
-    description=("Django seo" + 
+    description=("Django seo field for models or urls" +
         " with RedsolutionCMS integration"),
     license="LGPL",
     keywords="django seo",
@@ -26,14 +26,15 @@ setup(
     url="http://packages.python.org/django-seo",
     classifiers=[
         'Development Status :: 3 - Alpha',
-        'Framework :: Buildout',
         'Intended Audience :: Developers',
         'License :: Freely Distributable',
+        'Framework :: Django',
+        'Environment :: Web Environment',
         'Natural Language :: Russian',
-        'Operating System :: Microsoft :: Windows',
-        'Operating System :: Unix',
-        'Programming Language :: Python :: 2.5',
-        'Topic :: Software Development :: Version Control',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Topic :: Internet :: WWW/HTTP :: Indexing/Search',
     ],
     packages=find_packages(),
     install_requires=[],
@@ -41,6 +42,6 @@ setup(
     zip_safe=False,
     long_description=open('README').read(),
     entry_points={
-        'redsolution_setup': ['seo = seo.redsolution_setup', ],
+        'redsolutioncms': ['seo = seo.redsolution_setup', ],
     }
 )
