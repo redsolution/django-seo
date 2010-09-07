@@ -11,7 +11,7 @@ def read(fname):
 
 setup(
     name="redsolutioncms.django-seo",
-    version="0.1.0",
+    version="0.2.0",
     description=("Django seo field for models or urls" +
         " with RedsolutionCMS integration"),
     license="LGPL",
