@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from redsolution.models import BaseSettings
+from redsolutioncms.models import BaseSettings
 
 class SeoSettings(BaseSettings):
     pass
