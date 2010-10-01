@@ -1,9 +1,9 @@
 {% load redsolutioncms_tags %}{% start_block %} extends '{{ cms_settings.base_template }}' {% end_block %}
 {% raw %}
-{% block meta %}
+{% block seo %}
     {% load seo_tags %}
     <meta name="keywords" content="{% block keywords %}{% seo keywords %}{% endblock %}" />
     <meta name="description" content="{% block description %}{% seo description %}{% endblock %}" />
     <title>{% block title %}{% seo title %}{% endblock %}</title>
-{% endblock meta %}
+{% endblock seo %}
 {% endraw %}
