@@ -19,7 +19,8 @@ Usage:
 In settings.py:
 ---------------
 
-Add names of ModelAdmins to be override:: 
+Add names of ModelAdmins to be override::
+ 
     SEO_FOR_MODELS = [
         '<app>.models.<Model>',
     ]
@@ -42,6 +43,7 @@ Example:
 ========
 
 ``settings.py``::
+
     INSTALLED_APPS = (
         ...
         'app',
@@ -56,6 +58,7 @@ Example:
 
 
 ``templates/object.html``::
+
     {% load seo_tags %}
     <html>
         <head>
@@ -73,6 +76,7 @@ If you are using extend
 -----------------------
 
 ``templates/base.html``::
+
     <html>
         <head>
             <meta name="description" content="{% block description %}{% seo description %}{% endblock %}" />
@@ -85,6 +89,7 @@ If you are using extend
     </html>
 
 ``templates/object.html``::
+
     {% load seo_tags %}
     {% block description %}{% seo description for object %}{% endblock %}
     {% block keywords %}{% seo keywords for object %}{% endblock %}
@@ -95,6 +100,7 @@ If you are using extend
     {% endblock %}
 
 ``templates/another.html``::
+
     {% load seo_tags %}
     {% block description %}{% seo description for another %}{% endblock %}
     {% block keywords %}{% seo keywords for another %}{% endblock %}
@@ -103,3 +109,11 @@ If you are using extend
     {% block content %}
         {{ another.content }}
     {% endblock %}
+
+Redsolution CMS classifiers:
+----------------------------
+
+`Content plugins`_
+
+.. _`Content plugins`: http://www.redsolutioncms.org/classifiers/content
+    
