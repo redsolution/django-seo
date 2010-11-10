@@ -16,7 +16,7 @@ setup(
     name="redsolutioncms.django-seo",
     version=__import__('seo').__version__,
     description=read('DESCRIPTION'),
-    license="LGPL",
+    license="GPLv3",
     keywords="django seo",
 
     author="Alexander Ivanov",
