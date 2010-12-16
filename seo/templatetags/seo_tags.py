@@ -2,9 +2,7 @@
 
 from django import template
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
-from django.http import HttpRequest
-from django.template.loader import render_to_string
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ImproperlyConfigured
 from django.utils.html import escape
 from seo.models import Seo, Url
 
@@ -24,25 +22,28 @@ class SeoNode(template.Node):
         else:
             object = template.Variable(self.object).resolve(context)
         try:
-            if object is None:
-                raise ObjectDoesNotExist
-            seo = Seo.objects.get(
-                content_type=ContentType.objects.get_for_model(
-                        object.__class__),
-                object_id=object.id)
-        except ObjectDoesNotExist:
             try:
-                request = context['request']
-            except KeyError:
-                raise ImproperlyConfigured('`request` was not found in context. Add "django.core.context_processors.request" to `TEMPLATE_CONTEXT_PROCESSORS` in your settings.py.')
-            try:
-                object = Url.objects.get(url=request.path_info)
+                if object is None:
+                    raise ObjectDoesNotExist
                 seo = Seo.objects.get(
                     content_type=ContentType.objects.get_for_model(
                             object.__class__),
                     object_id=object.id)
             except ObjectDoesNotExist:
-                seo = Seo()
+                try:
+                    request = context['request']
+                except KeyError:
+                    raise ImproperlyConfigured('`request` was not found in context. Add "django.core.context_processors.request" to `TEMPLATE_CONTEXT_PROCESSORS` in your settings.py.')
+                try:
+                    object = Url.objects.get(url=request.path_info)
+                    seo = Seo.objects.get(
+                        content_type=ContentType.objects.get_for_model(
+                                object.__class__),
+                        object_id=object.id)
+                except ObjectDoesNotExist:
+                    raise MultipleObjectsReturned
+        except MultipleObjectsReturned:
+            seo = Seo()
         if self.variable is None:
             return escape(getattr(seo, self.intent))
         else:
