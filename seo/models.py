@@ -9,6 +9,7 @@ class Seo(models.Model):
     class Meta:
         verbose_name = _('SEO fields')
         verbose_name_plural = _('SEO fields')
+        unique_together = (("content_type", "object_id"),)
 
     title = models.CharField(verbose_name=_('Title'),
         max_length=200, default='', blank=True)
