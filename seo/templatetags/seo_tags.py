@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import warnings
 from django import template
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
@@ -31,12 +31,11 @@ class SeoNode(template.Node):
                         object.__class__),
                 object_id=object.id)
         except ObjectDoesNotExist:
+            if 'request' not in context:
+                warnings.warn('`request` was not found in context. Is "django.core.context_processors.request" enabled in `TEMPLATE_CONTEXT_PROCESSORS`?')
+            path_info = context['request'].path_info
             try:
-                request = context['request']
-            except KeyError:
-                raise ImproperlyConfigured('`request` was not found in context. Add "django.core.context_processors.request" to `TEMPLATE_CONTEXT_PROCESSORS` in your settings.py.')
-            try:
-                object = Url.objects.get(url=request.path_info)
+                object = Url.objects.get(url=path_info)
                 seo = Seo.objects.get(
                     content_type=ContentType.objects.get_for_model(
                             object.__class__),
