@@ -25,36 +25,43 @@ class SeoNode(template.Node):
             context[self.variable] = getattr(seo, self.intent)
             return u''
 
+    def _seo_by_url(self, context):
+        try:
+            request = context['request']
+        except KeyError:
+            warnings.warn('`request` was not found in context. Add "django.core.context_processors.request" to `TEMPLATE_CONTEXT_PROCESSORS` in your settings.py.')
+            return u''
+        else:
+            try:
+                object = Url.objects.get(url=request.path_info)
+            except Url.DoesNotExist:
+                return u''
+            else:
+                seo = Seo.objects.get(
+                    content_type=ContentType.objects.get_for_model(
+                            object.__class__),
+                    object_id=object.id)
+                return self._process_var_argument(context)
+
+    def _seo_by_content_object(self, context):
+        object = template.Variable(self.object).resolve(context)
+        try:
+            seo = Seo.objects.get(
+                content_type=ContentType.objects.get_for_model(
+                        object.__class__),
+                object_id=object.id)
+        except Seo.DoesNotExist:
+            return self._seo_by_url(context)
+        else:
+            return self._process_var_argument(context)
+
     def render(self, context):
         if self.object is None:
             # search by URL
-            try:
-                request = context['request']
-            except KeyError:
-                warnings.warn('`request` was not found in context. Add "django.core.context_processors.request" to `TEMPLATE_CONTEXT_PROCESSORS` in your settings.py.')
-            else:
-                object = Url.objects.get(url=request.path_info)
-                seo = Seo.objects.get(
-                    content_type=ContentType.objects.get_for_model(
-                            object.__class__),
-                    object_id=object.id)
-                return self._process_var_argument(context)
-
+            return self._seo_by_url(context)
         else:
-            # Tyr to retrieve object from context
-            object = template.Variable(self.object).resolve(context)
-            try:
-                seo = Seo.objects.get(
-                    content_type=ContentType.objects.get_for_model(
-                            object.__class__),
-                    object_id=object.id)
-            except Seo.DoesNotExist:
-                raise
-            else:
-                return self._process_var_argument(context)
-
-        # silent fallback
-        return u''
+            # Try to retrieve object from context
+            return self._seo_by_content_object(context)
 
 
 def seo_tag(parser, token):
