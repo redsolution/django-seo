@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import warnings
 from django import template
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
@@ -7,6 +6,7 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from seo.models import Seo, Url
+import warnings
 
 INTENTS = ['title', 'keywords', 'description', ]
 
@@ -18,35 +18,44 @@ class SeoNode(template.Node):
         self.object = object
         self.variable = variable
 
-    def render(self, context):
-        if self.object is None:
-            object = None
-        else:
-            object = template.Variable(self.object).resolve(context)
-        try:
-            if object is None:
-                raise ObjectDoesNotExist
-            seo = Seo.objects.get(
-                content_type=ContentType.objects.get_for_model(
-                        object.__class__),
-                object_id=object.id)
-        except ObjectDoesNotExist:
-            if 'request' not in context:
-                warnings.warn('`request` was not found in context. Is "django.core.context_processors.request" enabled in `TEMPLATE_CONTEXT_PROCESSORS`?')
-            path_info = context['request'].path_info
-            try:
-                object = Url.objects.get(url=path_info)
-                seo = Seo.objects.get(
-                    content_type=ContentType.objects.get_for_model(
-                            object.__class__),
-                    object_id=object.id)
-            except ObjectDoesNotExist:
-                seo = Seo()
+    def _process_var_argument(self, context):
         if self.variable is None:
             return escape(getattr(seo, self.intent))
         else:
             context[self.variable] = getattr(seo, self.intent)
             return u''
+
+    def render(self, context):
+        if self.object is None:
+            # search by URL
+            try:
+                request = context['request']
+            except KeyError:
+                warnings.warn('`request` was not found in context. Add "django.core.context_processors.request" to `TEMPLATE_CONTEXT_PROCESSORS` in your settings.py.')
+            else:
+                object = Url.objects.get(url=request.path_info)
+                seo = Seo.objects.get(
+                    content_type=ContentType.objects.get_for_model(
+                            object.__class__),
+                    object_id=object.id)
+                return self._process_var_argument(context)
+
+        else:
+            # Tyr to retrieve object from context
+            object = template.Variable(self.object).resolve(context)
+            try:
+                seo = Seo.objects.get(
+                    content_type=ContentType.objects.get_for_model(
+                            object.__class__),
+                    object_id=object.id)
+            except Seo.DoesNotExist:
+                raise
+            else:
+                return self._process_var_argument(context)
+
+        # silent fallback
+        return u''
+
 
 def seo_tag(parser, token):
     """Get seo data for object"""
