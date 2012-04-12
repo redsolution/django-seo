@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import template
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
-from django.http import HttpRequest
-from django.template.loader import render_to_string
+from django.db.models import Model
 from django.utils.html import escape
 from seo.models import Seo, Url
 import warnings
@@ -18,7 +16,7 @@ class SeoNode(template.Node):
         self.object = object
         self.variable = variable
 
-    def _process_var_argument(self, context):
+    def _process_var_argument(self, context, seo):
         if self.variable is None:
             return escape(getattr(seo, self.intent))
         else:
@@ -41,10 +39,13 @@ class SeoNode(template.Node):
                     content_type=ContentType.objects.get_for_model(
                             object.__class__),
                     object_id=object.id)
-                return self._process_var_argument(context)
+                return self._process_var_argument(context, seo)
 
     def _seo_by_content_object(self, context):
         object = template.Variable(self.object).resolve(context)
+        if not isinstance(object, Model):
+            return u''
+
         try:
             seo = Seo.objects.get(
                 content_type=ContentType.objects.get_for_model(
@@ -53,7 +54,7 @@ class SeoNode(template.Node):
         except Seo.DoesNotExist:
             return self._seo_by_url(context)
         else:
-            return self._process_var_argument(context)
+            return self._process_var_argument(context, seo)
 
     def render(self, context):
         if self.object is None:
