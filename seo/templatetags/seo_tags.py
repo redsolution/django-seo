@@ -18,9 +18,9 @@ class SeoNode(template.Node):
 
     def _process_var_argument(self, context, seo):
         if self.variable is None:
-            return escape(getattr(seo, self.intent))
+            return escape(getattr(seo, self.intent, u''))
         else:
-            context[self.variable] = getattr(seo, self.intent)
+            context[self.variable] = getattr(seo, self.intent, None)
             return u''
 
     def _seo_by_url(self, context):
@@ -28,23 +28,27 @@ class SeoNode(template.Node):
             request = context['request']
         except KeyError:
             warnings.warn('`request` was not found in context. Add "django.core.context_processors.request" to `TEMPLATE_CONTEXT_PROCESSORS` in your settings.py.')
-            return u''
+            return self._process_var_argument(context, None)
         else:
             try:
                 object = Url.objects.get(url=request.path_info)
             except Url.DoesNotExist:
-                return u''
+                return self._process_var_argument(context, None)
             else:
-                seo = Seo.objects.get(
-                    content_type=ContentType.objects.get_for_model(
-                            object.__class__),
-                    object_id=object.id)
-                return self._process_var_argument(context, seo)
+                try:
+                    seo = Seo.objects.get(
+                        content_type=ContentType.objects.get_for_model(
+                                object.__class__),
+                        object_id=object.id)
+                except Seo.DoesNotExist:
+                    return self._process_var_argument(context, None)
+                else:
+                    return self._process_var_argument(context, seo)
 
     def _seo_by_content_object(self, context):
         object = template.Variable(self.object).resolve(context)
         if not isinstance(object, Model):
-            return u''
+            return self._process_var_argument(context, None)
 
         try:
             seo = Seo.objects.get(
