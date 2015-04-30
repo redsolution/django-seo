@@ -1,3 +1,4 @@
 recursive-include seo *.py
 recursive-include seo/redsolutioncms *.pyt *.html
+recursive-include seo/locale *.po *.mo
 exclude *.orig *.pyc
