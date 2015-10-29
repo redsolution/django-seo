@@ -4,6 +4,7 @@ from seo.models import Seo
 class SeoForm(forms.ModelForm):
     class Meta:
         model = Seo
+        fields = '__all__'
 
     title = forms.CharField(
         required=not Seo._meta.get_field('title').blank,
