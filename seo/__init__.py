@@ -1,1 +1,2 @@
-__version__ = '0.3.7'
+__version__ = '1.11'
+default_app_config = "seo.apps.SeoAppConfig"

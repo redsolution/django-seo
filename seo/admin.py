@@ -2,37 +2,29 @@
 
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.admin import GenericStackedInline
 from django.core.exceptions import ImproperlyConfigured
 from seo.importpath import importpath
 from seo.forms import SeoForm
 from seo.models import Seo, Url
 
-class SeoInlines(generic.GenericStackedInline):
+
+class SeoInlines(GenericStackedInline):
     model = Seo
     form = SeoForm
     extra = 1
     max_num = 1
 
-class SeoAdmin(admin.ModelAdmin):
-    model = Seo
 
-try:
-    admin.site.register(Seo, SeoAdmin)
-except admin.sites.AlreadyRegistered:
-    pass
-
+@admin.register(Url)
 class UrlAdmin(admin.ModelAdmin):
     model = Url
     inlines = [SeoInlines]
 
-try:
-    admin.site.register(Url, UrlAdmin)
-except admin.sites.AlreadyRegistered:
-    pass
 
 if not hasattr(settings, 'SEO_FOR_MODELS'):
     raise ImproperlyConfigured('Please add ``SEO_FOR_MODELS = ["<app>.admin.<ModelAdmin>",]`` to your settings.py')
+
 
 for model_name in settings.SEO_FOR_MODELS:
     model = importpath(model_name, 'SEO_FOR_MODELS')
