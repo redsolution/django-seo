@@ -25,7 +25,6 @@ setup(
     maintainer='Alexander Ivanov',
     maintainer_email='alexander.ivanov@redsolution.ru',
 
-#    url="http://packages.python.org/django-seo",
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -39,7 +38,7 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Indexing/Search',
     ],
     packages=find_packages(),
-    install_requires=["django", ],
+    install_requires=["django==1.11.*"],
     include_package_data=True,
     zip_safe=False,
     long_description=read('README'),
