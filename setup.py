@@ -38,7 +38,7 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Indexing/Search',
     ],
     packages=find_packages(),
-    install_requires=["django==1.11.*"],
+    install_requires=["django==2.2.*"],
     include_package_data=True,
     zip_safe=False,
     long_description=read('README'),

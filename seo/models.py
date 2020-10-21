@@ -19,11 +19,11 @@ class Seo(models.Model):
     keywords = models.CharField(verbose_name=_('Keywords'),
         max_length=1000, default='', blank=True)
 
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -39,5 +39,5 @@ class Url(models.Model):
     def get_absolute_url(self):
         return self.url
 
-    def __unicode__(self):
+    def __str__(self):
         return self.url

@@ -9,8 +9,8 @@ Open source SEO management system based on the Django framework
 - Query caching for faster page loading
 
 ## Requirements
-- Django 1.11.*
-- Python 2.7
+- Django >= 2.2
+- Python >= 3.5
 
 ## Installation and basic usage
 
