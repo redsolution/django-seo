@@ -12,9 +12,9 @@ class Seo(models.Model):
         unique_together = (("content_type", "object_id"),)
 
     title = models.CharField(verbose_name=_('Title'),
-        max_length=200, default='', blank=True)
+        max_length=1000, default='', blank=True)
     description = models.CharField(verbose_name=_('Description'),
-        max_length=200, default='', blank=True)
+        max_length=1000, default='', blank=True)
     keywords = models.CharField(verbose_name=_('Keywords'),
         max_length=1000, default='', blank=True)
 
